@@ -45,10 +45,15 @@ def create_carros():
 @app.route('/carros/<int:id>', methods = ['PUT'])
 def alter_carros(id):
     carro_alter = request.get_json()
+    # Função enumerate verifica pega o indice da lista juntamente com o valor.
     for indice, carro in enumerate(carros):
         if carro.get('id') == id:
-            indice[carro].update(carro_alter)
-            return jsonify(indice[carro])
+            if indice < len(carros):
+                carros[indice].update(carro_alter)
+                return jsonify(carros[indice])
+            else:
+                return jsonify({"message": "Index out of range"})
+    return jsonify({"message": "Car not found"})
 
 
 @app.route('/carros/<int:id>', methods = ['DELETE'])
@@ -56,7 +61,7 @@ def delete_carros(id):
     for carro in carros:
         if carro.get('id') == id:
             carros.remove(carro)
-            return jsonify({"message": f"Car deleted successfully"})
+            return jsonify({"message": "Car deleted successfully"})
 
-
-app.run(port=5000, host='localhost', debug= True)
+if __name__ == '__main__':
+    app.run(port=5000, host='localhost', debug= True)
